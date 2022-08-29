@@ -11,7 +11,7 @@ const dbDataSource = new DataSource({
   synchronize: false,
   logging: false,
   entities: [`${__dirname}/entities/*`],
-  migrations: [`${__dirname}/migrations/*`]
-})
+  migrations: [`${__dirname}/migrations/*`],
+});
 
 export default dbDataSource;

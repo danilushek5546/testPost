@@ -1,9 +1,10 @@
 import type { Handler } from 'express';
-import User from '../../db/entities/models';
 import ApiError from '../../error/ApiError';
 import db from '../../db';
+import User from '../../db/entities/models';
+import generateJWT from '../../services/generateJWT';
 
-const postUsers: Handler = async (req, res, next) => {
+const signUp: Handler = async (req, res, next) => {
   try {
     const {
       email,
@@ -28,10 +29,12 @@ const postUsers: Handler = async (req, res, next) => {
     });
 
     user = await db.user.save(user);
-    return res.send({ user });
+    delete user.password;
+    const jwt = await generateJWT(user.id, email);
+    return res.send({ user, jwt });
   } catch (error) {
     return next(error);
   }
 };
 
-export default postUsers;
+export default signUp;

@@ -1,35 +1,28 @@
 import type { Handler } from 'express';
 import ApiError from '../../error/ApiError';
 import db from '../../db';
+import generateJWT from '../../services/generateJWT';
 
-const putUser: Handler = async (req, res, next) => {
+const signIn: Handler = async (req, res, next) => {
   try {
-    const { id } = req.params;
     const {
       email,
-      fullName,
-      dob,
       password,
     } = req.body;
-
     const user = await db.user.findOneBy({
-      id: +id,
+      email,
     });
 
     if (!user) {
       return next(new ApiError({ statusCode: 404, message: 'user not found' }));
     }
 
-    user.dob = new Date(dob);
-    user.email = email;
-    user.fullName = fullName;
-    user.password = password;
-    await db.user.save(user);
-
-    return res.send({ user });
+    delete user.password;
+    const jwt = await generateJWT(user.id, email);
+    return res.send({ user, jwt });
   } catch (error) {
-    return next(new Error());
+    return next(error);
   }
 };
 
-export default putUser;
+export default signIn;

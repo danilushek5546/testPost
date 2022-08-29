@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
 import path from 'path';
 
-const localEnv = dotenv.config({path: path.normalize(`${__dirname}/../.env`) }).parsed;
-const defaultEnv = dotenv.config({path: path.normalize(`${__dirname}/../defailt.env`) }).parsed;
+const localEnv = dotenv.config({ path: path.normalize(`${__dirname}/../.env`) }).parsed;
+const defaultEnv = dotenv.config({ path: path.normalize(`${__dirname}/../defailt.env`) }).parsed;
 
 const joinEnv = {
   ...defaultEnv,
@@ -16,6 +16,8 @@ const config = {
   dbPassword: joinEnv.DB_PASSWORD,
   dbHost: joinEnv.DB_HOST,
   dbPort: +joinEnv.DB_PORT,
+  secretKey: joinEnv.SECRET_KEY,
+  expiresIn: joinEnv.EXPIRES_IN,
 };
 
 export default config;
