@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import type { Handler } from 'express';
 import ApiError from '../error/ApiError';
 import config from '../config';
-import User from '../db/entities/models';
+import db from '../db';
 
 declare module 'jsonwebtoken' {
   export interface ITypeJwtPayload extends jwt.JwtPayload {
@@ -19,11 +19,10 @@ const isAuth: Handler = async (req, res, next) => {
       return next(new ApiError({ statusCode: 404, message: 'user not found' }));
     }
 
-    const decoded = <jwt.ITypeJwtPayload>jwt.verify(token, config.secretKey);
-    const id = Number(decoded.id);
-    const user = await User.findOneBy({ id });
+    const decoded = jwt.verify(token, config.token.secretKey) as { id: number; email: string };
+    const user = await db.user.findOneBy({ id: decoded.id });
 
-    req.body = user;
+    req.user = user!;
 
     next();
   } catch (error) {

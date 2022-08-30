@@ -13,8 +13,8 @@ const deleteUser: Handler = async (req, res, next) => {
       return next(new ApiError({ statusCode: 404, message: 'user not found' }));
     }
 
-    db.user.remove(user);
-    return res.send({ user });
+    await db.user.remove(user);
+    return res.json({ user });
   } catch (error) {
     return next(error);
   }

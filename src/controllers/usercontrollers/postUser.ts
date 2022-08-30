@@ -1,6 +1,9 @@
 import type { Handler } from 'express';
 import CryptoJS from 'crypto-js';
-import User from '../../db/entities/models';
+import {
+  ReasonPhrases,
+  StatusCodes,
+} from 'http-status-codes';
 import ApiError from '../../error/ApiError';
 import db from '../../db';
 import config from '../../config';
@@ -18,12 +21,13 @@ const postUsers: Handler = async (req, res, next) => {
       email,
     });
     if (isEmailUnique) {
-      return next(new ApiError({ statusCode: 404, message: 'user with this email is allready exists' }));
+      return next(new ApiError({ statusCode: StatusCodes.BAD_REQUEST,
+        message: ReasonPhrases.BAD_REQUEST }));
     }
 
-    const hash = CryptoJS.AES.encrypt(password, config.salt).toString();
+    const hash = CryptoJS.AES.encrypt(password, config.passwordSalt).toString();
 
-    let user = User.create({
+    let user = db.user.create({
       fullName,
       email,
       dob: new Date(dob),
@@ -32,7 +36,7 @@ const postUsers: Handler = async (req, res, next) => {
     user = await db.user.save(user);
 
     delete user?.password;
-    return res.send({ user });
+    return res.json({ user });
   } catch (error) {
     return next(error);
   }

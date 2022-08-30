@@ -1,34 +1,36 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/indent */
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity(({ name: 'users' }))
-class User extends BaseEntity {
+class User {
   @PrimaryGeneratedColumn()
-    id: number;
+  id: number;
 
   @Column({
     type: "varchar",
     nullable: true,
-    })
-    fullName?: string;
+  })
+  fullName?: string;
 
   @Column({
     unique: true,
     type: "varchar",
     nullable: false,
-    })
-    email: string;
+  })
+  email: string;
 
   @Column({
     type: "varchar",
     nullable: false,
-    })
-    password?: string;
+  })
+  password?: string;
 
   @Column({
     type: "date",
     nullable: true,
-    })
-    dob?: Date;
+  })
+  dob?: Date;
 }
 
 export default User;

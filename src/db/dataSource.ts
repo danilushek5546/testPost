@@ -3,11 +3,11 @@ import config from '../config';
 
 const dbDataSource = new DataSource({
   type: 'postgres',
-  port: config.dbPort,
-  host: config.dbHost,
-  username: config.dbUser,
-  password: config.dbPassword,
-  database: config.dbName,
+  port: config.db.port,
+  host: config.db.host,
+  username: config.db.user,
+  password: config.db.password,
+  database: config.db.name,
   synchronize: false,
   logging: false,
   entities: [`${__dirname}/entities/*`],

@@ -2,7 +2,7 @@ import type { Handler } from 'express';
 import CryptoJS from 'crypto-js';
 import ApiError from '../../error/ApiError';
 import db from '../../db';
-import generateJWT from '../../services/generateJWT';
+import generateJWT from '../../utils/generateJWT';
 import config from '../../config';
 
 const signIn: Handler = async (req, res, next) => {
@@ -19,8 +19,9 @@ const signIn: Handler = async (req, res, next) => {
       return next(new ApiError({ statusCode: 404, message: 'user not found' }));
     }
 
-    const hash = user?.password || '';
-    const decryptPassword = CryptoJS.AES.decrypt(hash, config.salt).toString(CryptoJS.enc.Utf8);
+    const hash = user.password!;
+    const decryptPassword = CryptoJS.AES.decrypt(hash, config.passwordSalt)
+      .toString(CryptoJS.enc.Utf8);
 
     if (password !== decryptPassword) {
       return next(new ApiError({ statusCode: 404, message: 'wrong password' }));
@@ -29,7 +30,7 @@ const signIn: Handler = async (req, res, next) => {
     const jwt = await generateJWT(user.id, email);
 
     delete user.password;
-    return res.send({ user, jwt });
+    return res.json({ user, jwt });
   } catch (error) {
     return next(error);
   }

@@ -21,7 +21,7 @@ const putUser: Handler = async (req, res, next) => {
       return next(new ApiError({ statusCode: 404, message: 'user not found' }));
     }
 
-    const hash = CryptoJS.AES.encrypt(password, config.salt).toString();
+    const hash = CryptoJS.AES.encrypt(password, config.passwordSalt).toString();
 
     user.dob = new Date(dob);
     user.email = email;
@@ -29,7 +29,7 @@ const putUser: Handler = async (req, res, next) => {
     user.password = hash;
     await db.user.save(user);
 
-    return res.send({ user });
+    return res.json({ user });
   } catch (error) {
     return next(error);
   }

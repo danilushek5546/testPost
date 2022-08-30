@@ -13,7 +13,7 @@ const getOneUser: Handler = async (req, res, next) => {
       return next(new ApiError({ statusCode: 404, message: 'user not found' }));
     }
 
-    return res.send({ user });
+    return res.json({ user });
   } catch (error) {
     return next(error);
   }
