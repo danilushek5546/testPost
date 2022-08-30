@@ -18,6 +18,7 @@ const config = {
   dbPort: +joinEnv.DB_PORT,
   secretKey: joinEnv.SECRET_KEY,
   expiresIn: joinEnv.EXPIRES_IN,
+  salt: joinEnv.SALT,
 };
 
 export default config;
