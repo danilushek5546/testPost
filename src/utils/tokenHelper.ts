@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import config from '../config';
 
-export const generateToken = async (id: number) => {
+export const generateToken = (id: number) => {
   return jwt.sign(
     { id },
     config.token.secretKey,
@@ -9,6 +9,6 @@ export const generateToken = async (id: number) => {
   );
 };
 
-export const verifyToken = async (token: string) => {
+export const verifyToken = (token: string) => {
   return jwt.verify(token, config.token.secretKey) as { id: number };
 };

@@ -1,9 +1,22 @@
-import type { Handler } from 'express';
+import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
+
 import db from '../../db';
 import ApiError from '../../utils/ApiError';
 
-const deleteUser: Handler = async (req, res, next) => {
+type ParamsType = {
+  id: string;
+};
+
+type ResponseType = Record<string, never>;
+
+type BodyType = Record<string, never>;
+
+type QueryType = Record<string, never>;
+
+type HandlerType = RequestHandler<ParamsType, ResponseType, BodyType, QueryType>;
+
+const deleteUser: HandlerType = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -15,7 +28,7 @@ const deleteUser: Handler = async (req, res, next) => {
     }
 
     await db.user.remove(user);
-    return res.json({ user });
+    return res.sendStatus(StatusCodes.NO_CONTENT);
   } catch (error) {
     return next(error);
   }

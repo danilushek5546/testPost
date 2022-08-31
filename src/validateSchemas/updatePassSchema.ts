@@ -10,4 +10,14 @@ const updatePassSchema = object({
   }),
 });
 
+const updatePassSchema2 = {
+  params: {
+    id: number().required(),
+  },
+  body: {
+    oldPassword: string().required(),
+    newPassword: string().required(),
+  },
+};
+
 export default updatePassSchema;

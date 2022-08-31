@@ -1,12 +1,29 @@
-import type { Handler } from 'express';
-import {
-  StatusCodes,
-} from 'http-status-codes';
+import type { RequestHandler } from 'express';
+import { StatusCodes } from 'http-status-codes';
+
 import ApiError from '../../utils/ApiError';
 import db from '../../db';
 import { encodeHash } from '../../utils/hash';
+import type User from '../../db/entities/User';
 
-const createUser: Handler = async (req, res, next) => {
+type ParamsType = Record<string, never>;
+
+type ResponseType = {
+  user: User;
+};
+
+type BodyType = {
+  email: string;
+  password: string;
+  fullName: string;
+  dob: Date;
+};
+
+type QueryType = Record<string, never>;
+
+type HandlerType = RequestHandler<ParamsType, ResponseType, BodyType, QueryType>;
+
+const createUser: HandlerType = async (req, res, next) => {
   try {
     const {
       email,
@@ -31,7 +48,7 @@ const createUser: Handler = async (req, res, next) => {
       }));
     }
 
-    const hash:string = encodeHash(password);
+    const hash: string = encodeHash(password);
 
     let user = db.user.create({
       fullName,

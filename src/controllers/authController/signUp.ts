@@ -1,11 +1,31 @@
-import type { Handler } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import type { RequestHandler } from 'express';
+
 import ApiError from '../../utils/ApiError';
 import db from '../../db';
+import type User from '../../db/entities/User';
 import { generateToken } from '../../utils/tokenHelper';
 import { encodeHash } from '../../utils/hash';
 
-const signUp: Handler = async (req, res, next) => {
+type ParamsType = Record<string, never>;
+
+type ResponseType = {
+  user: User;
+  token: string;
+};
+
+type BodyType = {
+  email: string;
+  password: string;
+  fullName: string;
+  dob: Date;
+};
+
+type QueryType = Record<string, never>;
+
+type HandlerType = RequestHandler<ParamsType, ResponseType, BodyType, QueryType>;
+
+const signUp: HandlerType = async (req, res, next) => {
   try {
     const {
       email,
@@ -14,7 +34,7 @@ const signUp: Handler = async (req, res, next) => {
       password,
     } = req.body;
 
-    const isEmailNotUnique = await db.user.findOne({
+    const existingUser = await db.user.findOne({
       select: {
         email: true,
       },
@@ -23,14 +43,14 @@ const signUp: Handler = async (req, res, next) => {
       },
     });
 
-    if (isEmailNotUnique) {
+    if (existingUser) {
       return next(new ApiError({
         statusCode: StatusCodes.BAD_REQUEST,
         message: 'user with this email is allready exists',
       }));
     }
 
-    const hash:string = encodeHash(password);
+    const hash = encodeHash(password);
 
     let user = db.user.create({
       fullName,
@@ -40,7 +60,7 @@ const signUp: Handler = async (req, res, next) => {
     });
     user = await db.user.save(user);
 
-    const token = await generateToken(user.id);
+    const token = generateToken(user.id);
 
     delete user.password;
     return res.json({ user, token });

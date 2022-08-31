@@ -1,10 +1,28 @@
-import type { Handler } from 'express';
+import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
+
 import ApiError from '../../utils/ApiError';
 import db from '../../db';
 import { decodeHash, encodeHash } from '../../utils/hash';
 
-const updatePassword: Handler = async (req, res, next) => {
+type ParamsType = {
+  id: string;
+};
+
+type ResponseType = {
+  message: string;
+};
+
+type BodyType = {
+  oldPassword: string;
+  newPassword: string;
+};
+
+type QueryType = Record<string, never>;
+
+type HandlerType = RequestHandler<ParamsType, ResponseType, BodyType, QueryType>;
+
+const updatePassword: HandlerType = async (req, res, next) => {
   try {
     const { id } = req.params;
     const {

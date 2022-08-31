@@ -1,9 +1,29 @@
-import type { Handler } from 'express';
+import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
+
 import ApiError from '../../utils/ApiError';
 import db from '../../db';
+import type User from '../../db/entities/User';
 
-const updateUser: Handler = async (req, res, next) => {
+type ParamsType = {
+  id: string;
+};
+
+type ResponseType = {
+  user: User;
+};
+
+type BodyType = {
+  email: string;
+  fullName: string;
+  dob: string;
+};
+
+type QueryType = Record<string, never>;
+
+type HandlerType = RequestHandler<ParamsType, ResponseType, BodyType, QueryType>;
+
+const updateUser: HandlerType = async (req, res, next) => {
   try {
     const { id } = req.params;
     const {
@@ -42,7 +62,6 @@ const updateUser: Handler = async (req, res, next) => {
 
     await db.user.save(user);
 
-    delete user.password;
     return res.json({ user });
   } catch (error) {
     return next(error);
