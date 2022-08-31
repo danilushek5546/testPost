@@ -1,11 +1,12 @@
 import type { Handler } from 'express';
-import { StatusCodes } from 'http-status-codes';
+import {
+  StatusCodes,
+} from 'http-status-codes';
 import ApiError from '../../utils/ApiError';
 import db from '../../db';
-import { generateToken } from '../../utils/tokenHelper';
 import { encodeHash } from '../../utils/hash';
 
-const signUp: Handler = async (req, res, next) => {
+const createUser: Handler = async (req, res, next) => {
   try {
     const {
       email,
@@ -40,13 +41,11 @@ const signUp: Handler = async (req, res, next) => {
     });
     user = await db.user.save(user);
 
-    const token = await generateToken(user.id);
-
     delete user.password;
-    return res.json({ user, token });
+    return res.json({ user });
   } catch (error) {
     return next(error);
   }
 };
 
-export default signUp;
+export default createUser;

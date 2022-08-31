@@ -1,15 +1,7 @@
-import jwt from 'jsonwebtoken';
 import type { Handler } from 'express';
-import ApiError from '../error/ApiError';
-import config from '../config';
+import ApiError from '../utils/ApiError';
 import db from '../db';
-
-declare module 'jsonwebtoken' {
-  export interface ITypeJwtPayload extends jwt.JwtPayload {
-    id: number;
-    email: string;
-  }
-}
+import { verifyToken } from '../utils/tokenHelper';
 
 const isAuth: Handler = async (req, res, next) => {
   try {
@@ -19,8 +11,8 @@ const isAuth: Handler = async (req, res, next) => {
       return next(new ApiError({ statusCode: 404, message: 'user not found' }));
     }
 
-    const decoded = jwt.verify(token, config.token.secretKey) as { id: number; email: string };
-    const user = await db.user.findOneBy({ id: decoded.id });
+    const decodedToken = await verifyToken(token);
+    const user = await db.user.findOneBy({ id: decodedToken.id });
 
     req.user = user!;
 

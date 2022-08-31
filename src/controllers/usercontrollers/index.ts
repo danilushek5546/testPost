@@ -1,13 +1,15 @@
 import getAllUsers from './getAllUsers';
-import postUser from './postUser';
-import putUser from './putUser';
+import createUser from './createUser';
+import updateUser from './updateUser';
 import getOne from './getOneUser';
 import deleteUser from './deleteUser';
+import updatePassword from './updatePassword';
 
 export default {
   getAllUsers,
-  postUser,
-  putUser,
+  createUser,
+  updateUser,
   getOne,
   deleteUser,
+  updatePassword,
 };

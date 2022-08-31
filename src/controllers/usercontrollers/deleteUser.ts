@@ -1,6 +1,7 @@
 import type { Handler } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import db from '../../db';
-import ApiError from '../../error/ApiError';
+import ApiError from '../../utils/ApiError';
 
 const deleteUser: Handler = async (req, res, next) => {
   try {
@@ -10,7 +11,7 @@ const deleteUser: Handler = async (req, res, next) => {
       id: +id,
     });
     if (!user) {
-      return next(new ApiError({ statusCode: 404, message: 'user not found' }));
+      return next(new ApiError({ statusCode: StatusCodes.BAD_REQUEST, message: 'user not found' }));
     }
 
     await db.user.remove(user);

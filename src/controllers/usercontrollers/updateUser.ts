@@ -2,17 +2,23 @@ import type { Handler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import ApiError from '../../utils/ApiError';
 import db from '../../db';
-import { generateToken } from '../../utils/tokenHelper';
-import { encodeHash } from '../../utils/hash';
 
-const signUp: Handler = async (req, res, next) => {
+const updateUser: Handler = async (req, res, next) => {
   try {
+    const { id } = req.params;
     const {
       email,
       fullName,
       dob,
-      password,
     } = req.body;
+
+    const user = await db.user.findOneBy({
+      id: +id,
+    });
+
+    if (!user) {
+      return next(new ApiError({ statusCode: StatusCodes.BAD_REQUEST, message: 'user not found' }));
+    }
 
     const isEmailNotUnique = await db.user.findOne({
       select: {
@@ -30,23 +36,17 @@ const signUp: Handler = async (req, res, next) => {
       }));
     }
 
-    const hash:string = encodeHash(password);
+    user.dob = new Date(dob);
+    user.email = email;
+    user.fullName = fullName;
 
-    let user = db.user.create({
-      fullName,
-      email,
-      dob: new Date(dob),
-      password: hash,
-    });
-    user = await db.user.save(user);
-
-    const token = await generateToken(user.id);
+    await db.user.save(user);
 
     delete user.password;
-    return res.json({ user, token });
+    return res.json({ user });
   } catch (error) {
     return next(error);
   }
 };
 
-export default signUp;
+export default updateUser;

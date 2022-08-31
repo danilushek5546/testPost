@@ -1,12 +1,10 @@
-import { object, string, date } from 'yup';
+import { object, string } from 'yup';
 
-const userSchema = object({
+const singInSchema = object({
   body: object({
-    fullName: string().nullable(),
     email: string().email().required(),
-    dob: date().nullable(),
     password: string().required(),
   }),
 });
 
-export default userSchema;
+export default singInSchema;

@@ -2,18 +2,18 @@ import type { Handler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import ApiError from '../../utils/ApiError';
 import db from '../../db';
-import { generateToken } from '../../utils/tokenHelper';
-import { decodeHash } from '../../utils/hash';
+import { decodeHash, encodeHash } from '../../utils/hash';
 
-const signIn: Handler = async (req, res, next) => {
+const updatePassword: Handler = async (req, res, next) => {
   try {
+    const { id } = req.params;
     const {
-      email,
-      password,
+      oldPassword,
+      newPassword,
     } = req.body;
 
     const user = await db.user.findOneBy({
-      email,
+      id: +id,
     });
     if (!user) {
       return next(new ApiError({ statusCode: StatusCodes.BAD_REQUEST, message: 'user not found' }));
@@ -21,17 +21,20 @@ const signIn: Handler = async (req, res, next) => {
 
     const decryptPassword:string = decodeHash(user.password!);
 
-    if (password !== decryptPassword) {
+    if (oldPassword !== decryptPassword) {
       return next(new ApiError({ statusCode: StatusCodes.BAD_REQUEST, message: 'wrong password' }));
     }
 
-    const token = await generateToken(user.id);
+    const newHash:string = encodeHash(newPassword);
+
+    user.password = newHash;
+    await db.user.save(user);
 
     delete user.password;
-    return res.json({ user, token });
+    return res.json({ message: 'Password successfully changed' });
   } catch (error) {
     return next(error);
   }
 };
 
-export default signIn;
+export default updatePassword;
