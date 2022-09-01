@@ -1,8 +1,5 @@
-import signUpSchema from './signUpSchema';
-import singInSchema from './singInSchema';
-import updatePassSchema from './updatePassSchema';
-import updateUserSchema from './updateUserSchema';
-import getOneSchema from './getOneSchema';
+import { signUpSchema, singInSchema } from './authUserSchemas';
+import { updatePassSchema, updateUserSchema, getOneSchema, getAllSchema } from './userSchemas';
 
 export default {
   signUpSchema,
@@ -10,4 +7,5 @@ export default {
   updatePassSchema,
   updateUserSchema,
   getOneSchema,
+  getAllSchema,
 };

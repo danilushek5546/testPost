@@ -8,11 +8,11 @@ const router = Router();
 
 router.use(isAuth);
 
-router.get('/', usercontrollers.getAllUsers);
+router.get('/', validatitonMiddleware(validationSchemas.getAllSchema), usercontrollers.getAllUsers);
 router.get('/:id', validatitonMiddleware(validationSchemas.getOneSchema), usercontrollers.getOne);
 router.delete('/:id', validatitonMiddleware(validationSchemas.getOneSchema), usercontrollers.deleteUser);
 router.post('/', validatitonMiddleware(validationSchemas.signUpSchema), usercontrollers.createUser);
-router.patch('/:id', validatitonMiddleware(validationSchemas.updateUserSchema), usercontrollers.updateUser);
 router.patch('/change-password', validatitonMiddleware(validationSchemas.updatePassSchema), usercontrollers.updatePassword);
+router.patch('/:id', validatitonMiddleware(validationSchemas.updateUserSchema), usercontrollers.updateUser);
 
 export default router;

@@ -13,7 +13,14 @@ const isAuth: Handler = async (req, res, next) => {
     }
 
     const decodedToken = verifyToken(token);
+    if (!decodedToken) {
+      return next(new ApiError({ statusCode: StatusCodes.FORBIDDEN, message: 'token validation error' }));
+    }
+
     const user = await db.user.findOneBy({ id: decodedToken.id });
+    if (!user) {
+      return next(new ApiError({ statusCode: StatusCodes.NOT_FOUND, message: 'user not found' }));
+    }
 
     req.user = user!;
 

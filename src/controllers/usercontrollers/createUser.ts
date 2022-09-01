@@ -3,8 +3,8 @@ import { StatusCodes } from 'http-status-codes';
 
 import ApiError from '../../utils/ApiError';
 import db from '../../db';
-import { encodeHash } from '../../utils/hash';
 import type User from '../../db/entities/User';
+import { createHash } from '../../utils/hash';
 
 type ParamsType = Record<string, never>;
 
@@ -48,7 +48,7 @@ const createUser: HandlerType = async (req, res, next) => {
       }));
     }
 
-    const hash: string = encodeHash(password);
+    const hash = await createHash(password);
 
     let user = db.user.create({
       fullName,

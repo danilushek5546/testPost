@@ -37,7 +37,7 @@ const updateUser: HandlerType = async (req, res, next) => {
     });
 
     if (!user) {
-      return next(new ApiError({ statusCode: StatusCodes.BAD_REQUEST, message: 'user not found' }));
+      return next(new ApiError({ statusCode: StatusCodes.NOT_FOUND, message: 'user not found' }));
     }
 
     const isEmailNotUnique = await db.user.findOne({

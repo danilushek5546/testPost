@@ -1,11 +1,11 @@
 import { StatusCodes } from 'http-status-codes';
 import type { RequestHandler } from 'express';
 
+import { createHash } from '../../utils/hash';
 import ApiError from '../../utils/ApiError';
 import db from '../../db';
 import type User from '../../db/entities/User';
 import { generateToken } from '../../utils/tokenHelper';
-import { encodeHash } from '../../utils/hash';
 
 type ParamsType = Record<string, never>;
 
@@ -50,7 +50,7 @@ const signUp: HandlerType = async (req, res, next) => {
       }));
     }
 
-    const hash = encodeHash(password);
+    const hash = await createHash(password!);
 
     let user = db.user.create({
       fullName,

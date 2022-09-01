@@ -19,10 +19,11 @@ const config = {
     port: +joinEnv.DB_PORT,
   },
   token: {
-    secretKey: joinEnv.SECRET_KEY,
-    expiresIn: joinEnv.EXPIRES_IN,
+    secretKey: joinEnv.TOKEN_SECRET_KEY,
+    expiresIn: joinEnv.TOKEN_EXPIRES_IN,
   },
-  passwordSalt: joinEnv.SALT,
+  passwordSalt: joinEnv.HASH_SALT,
+  hashRule: joinEnv.HASH_RULE,
 };
 
 export default config;

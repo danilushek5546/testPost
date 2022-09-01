@@ -1,11 +1,11 @@
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
+import { createHash } from '../../utils/hash';
 import ApiError from '../../utils/ApiError';
 import db from '../../db';
 import type User from '../../db/entities/User';
 import { generateToken } from '../../utils/tokenHelper';
-import { decodeHash } from '../../utils/hash';
 
 type ParamsType = Record<string, never>;
 
@@ -30,19 +30,30 @@ const signIn: HandlerType = async (req, res, next) => {
       password,
     } = req.body;
 
-    const user = await db.user.findOneBy({ email });
+    const user = await db.user.findOne({
+      select: {
+        password: true,
+        email: true,
+        fullName: true,
+        dob: true,
+      },
+      where: {
+        email,
+      },
+    });
+
     if (!user) {
       return next(new ApiError({ statusCode: StatusCodes.NOT_FOUND, message: 'user with this email not found' }));
     }
 
-    const decryptPassword = decodeHash(user.password!);
-
-    if (password !== decryptPassword) {
+    const comparePassword = await createHash(password);
+    if (user.password !== comparePassword) {
       return next(new ApiError({ statusCode: StatusCodes.BAD_REQUEST, message: 'wrong password' }));
     }
 
     const token = generateToken(user.id);
 
+    delete user.password;
     return res.json({ user, token });
   } catch (error) {
     return next(error);
