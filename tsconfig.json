@@ -14,7 +14,7 @@
     "forceConsistentCasingInFileNames": true,
     "strictPropertyInitialization": false,
     "typeRoots": [
-      "@types",
+      "src/@types",
       "./node_modules/@types",
     ]
   },

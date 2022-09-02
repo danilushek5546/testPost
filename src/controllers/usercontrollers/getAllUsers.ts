@@ -25,8 +25,8 @@ type BodyType = Record<string, never>;
 type HandlerType = RequestHandler<ParamsType, ResponseType, BodyType, QueryType>;
 
 const getAllUsers: HandlerType = async (req, res, next) => {
-  let { page, perPage, sortBy, search } = req.query;
-  const { sortDirection, dobFrom, dobTo } = req.query;
+  let { page, perPage, search, dobFrom, dobTo } = req.query;
+  const { sortDirection, sortBy } = req.query;
   let offset = 0;
 
   search = `%${search || ''}%`;
@@ -39,8 +39,13 @@ const getAllUsers: HandlerType = async (req, res, next) => {
     perPage = '0';
   }
 
-  if (!sortBy) {
-    sortBy = 'id';
+  if (!dobTo) {
+    const newDate = new Date((Date.now()));
+    dobTo = `${newDate.getFullYear()}-${newDate.getMonth()}-${newDate.getDay()}`;
+  }
+
+  if (!dobFrom) {
+    dobFrom = '0001-01-01';
   }
 
   try {
@@ -48,7 +53,7 @@ const getAllUsers: HandlerType = async (req, res, next) => {
       skip: offset,
       take: +perPage,
       order: {
-        [sortBy]: sortDirection || 'ASC',
+        [sortBy || 'id']: sortDirection || 'ASC',
       },
       where: [
         {

@@ -1,4 +1,5 @@
 import { Router } from 'express';
+
 import usercontrollers from '../controllers/usercontrollers/index';
 import validatitonMiddleware from '../middlewares/validateMiddleware';
 import isAuth from '../middlewares/authMiddleware';

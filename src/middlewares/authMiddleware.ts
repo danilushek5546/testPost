@@ -1,5 +1,6 @@
 import type { Handler } from 'express';
 import { StatusCodes } from 'http-status-codes';
+
 import ApiError from '../utils/ApiError';
 import db from '../db';
 import { verifyToken } from '../utils/tokenHelper';

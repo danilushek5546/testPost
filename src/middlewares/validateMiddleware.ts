@@ -1,6 +1,7 @@
 import * as yup from 'yup';
 import type { Handler } from 'express';
 import { StatusCodes } from 'http-status-codes';
+
 import ApiError from '../utils/ApiError';
 import { yupErrorToErrorObject } from '../utils/yupErrorToErrorObject';
 import type { ValidationSheasType, ValidationType } from '../validateSchemas/validationSchemasType';
@@ -11,7 +12,7 @@ const validatitonMiddleware = (schema: ValidationType) => {
       Object.entries(schema).reduce((accum, element) => {
         return {
           ...accum,
-          [element[0]]: yup.object().shape(element[1]).noUnknown(true),
+          [element[0]]: yup.object().shape(element[1]),
         };
       }, {} as Record<string, yup.ObjectSchema<ValidationSheasType>>),
     );
@@ -20,7 +21,7 @@ const validatitonMiddleware = (schema: ValidationType) => {
         body: req.body,
         query: req.query,
         params: req.params,
-      }, { abortEarly: false, strict: true });
+      }, { abortEarly: false });
 
       next();
     } catch (err) {
