@@ -23,7 +23,7 @@ const isAuth: Handler = async (req, res, next) => {
       return next(new ApiError({ statusCode: StatusCodes.NOT_FOUND, message: 'user not found' }));
     }
 
-    req.user = user!;
+    req.user = user;
 
     next();
   } catch (error) {

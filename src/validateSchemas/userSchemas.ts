@@ -15,9 +15,7 @@ export const updateUserSchema: ValidationType = {
   },
   body: {
     fullName: yup.string(),
-    dob: yup.date().transform((originalValue) => {
-      return new Date(originalValue);
-    }).max(new Date(Date.now())),
+    dob: yup.date().max(new Date(Date.now())),
     email: yup.string().required('email is required'),
   },
 };

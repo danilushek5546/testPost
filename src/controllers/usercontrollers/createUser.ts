@@ -48,7 +48,7 @@ const createUser: HandlerType = async (req, res, next) => {
       }));
     }
 
-    const hash = await createHash(password);
+    const hash = await createHash(password || '');
 
     let user = db.user.create({
       fullName,
