@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express';
-import { Brackets, Like, Raw } from 'typeorm';
+import { Brackets } from 'typeorm';
 
 import type User from '../../db/entities/User';
 import db from '../../db';
