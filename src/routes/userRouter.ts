@@ -14,6 +14,7 @@ router.get('/:id', validatitonMiddleware(validationSchemas.getOneSchema), userco
 router.delete('/:id', validatitonMiddleware(validationSchemas.getOneSchema), usercontrollers.deleteUser);
 router.post('/', validatitonMiddleware(validationSchemas.signUpSchema), usercontrollers.createUser);
 router.patch('/change-password', validatitonMiddleware(validationSchemas.updatePassSchema), usercontrollers.updatePassword);
-router.patch('/:id', validatitonMiddleware(validationSchemas.updateUserSchema), usercontrollers.updateUser);
+router.patch('/', validatitonMiddleware(validationSchemas.updateUserSchema), usercontrollers.updateUser);
+router.patch('/photo', usercontrollers.uploadPhoto);
 
 export default router;

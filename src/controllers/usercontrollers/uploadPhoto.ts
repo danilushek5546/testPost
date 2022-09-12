@@ -1,5 +1,7 @@
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import * as uuid from 'uuid';
+import * as fs from 'fs/promises';
 
 import ApiError from '../../utils/ApiError';
 import db from '../../db';
@@ -13,51 +15,33 @@ type ResponseType = {
 };
 
 type BodyType = {
-  email: string;
-  fullName?: string;
-  dob?: Date;
+  image: string;
 };
 
 type QueryType = Record<string, never>;
 
 type HandlerType = RequestHandler<ParamsType, ResponseType, BodyType, QueryType>;
 
-const updateUser: HandlerType = async (req, res, next) => {
+const uploadPhoto: HandlerType = async (req, res, next) => {
   try {
     const {
-      email,
-      fullName,
-      dob,
+      image,
     } = req.body;
     const id = +req.user.id;
-
-    const isEmailNotUnique = await db.user.findOne({
-      select: {
-        id: true,
-        email: true,
-      },
-      where: {
-        email,
-      },
-    });
-
-    if (isEmailNotUnique && isEmailNotUnique.id !== id) {
-      return next(new ApiError({
-        statusCode: StatusCodes.BAD_REQUEST,
-        message: 'user with this email is allready exists',
-      }));
-    }
 
     const user = await db.user.findOne({ where: { id } });
     if (!user) {
       return next(new ApiError({ statusCode: StatusCodes.NOT_FOUND, message: 'user not found' }));
     }
 
-    if (dob) {
-      user.dob = dob;
+    const base64Image = image.split(';base64,').pop();
+    if (!base64Image) {
+      return next(new ApiError({ statusCode: StatusCodes.NOT_FOUND, message: 'user not found' }));
     }
-    user.email = email;
-    user.fullName = fullName;
+
+    const imageName = `${config.static}${uuid.v4()}.jpg`;
+    fs.writeFile(imageName, base64Image, { encoding: 'base64' });
+    user.image = base64Image;
 
     await db.user.save(user);
 
@@ -67,4 +51,4 @@ const updateUser: HandlerType = async (req, res, next) => {
   }
 };
 
-export default updateUser;
+export default uploadPhoto;

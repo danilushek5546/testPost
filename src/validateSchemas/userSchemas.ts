@@ -10,9 +10,6 @@ export const updatePassSchema: ValidationType = {
 };
 
 export const updateUserSchema: ValidationType = {
-  params: {
-    id: yup.number().required('id is required'),
-  },
   body: {
     fullName: yup.string(),
     dob: yup.date().max(new Date(Date.now())),

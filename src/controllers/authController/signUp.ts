@@ -29,8 +29,6 @@ const signUp: HandlerType = async (req, res, next) => {
   try {
     const {
       email,
-      fullName,
-      dob,
       password,
     } = req.body;
 
@@ -53,9 +51,7 @@ const signUp: HandlerType = async (req, res, next) => {
     const hash = await createHash(password!);
 
     let user = db.user.create({
-      fullName,
       email,
-      dob: new Date(dob),
       password: hash,
     });
     user = await db.user.save(user);

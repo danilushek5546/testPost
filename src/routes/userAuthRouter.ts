@@ -9,6 +9,6 @@ const router = Router();
 
 router.post('/login', validatitonMiddleware(validationSchemas.singInSchema), authController.signIn);
 router.post('/registration', validatitonMiddleware(validationSchemas.signUpSchema), authController.signUp);
-router.get('/', isAuth);
+router.get('/', isAuth, authController.auth);
 
 export default router;

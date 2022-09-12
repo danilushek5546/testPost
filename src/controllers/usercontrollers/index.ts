@@ -4,6 +4,7 @@ import updateUser from './updateUser';
 import getOne from './getOneUser';
 import deleteUser from './deleteUser';
 import updatePassword from './updatePassword';
+import uploadPhoto from './uploadPhoto';
 
 export default {
   getAllUsers,
@@ -12,4 +13,5 @@ export default {
   getOne,
   deleteUser,
   updatePassword,
+  uploadPhoto,
 };

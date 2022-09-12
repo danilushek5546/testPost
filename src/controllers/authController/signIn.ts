@@ -32,6 +32,7 @@ const signIn: HandlerType = async (req, res, next) => {
 
     const user = await db.user.findOne({
       select: {
+        id: true,
         password: true,
         email: true,
         fullName: true,

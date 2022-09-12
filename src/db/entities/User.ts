@@ -32,6 +32,12 @@ class User {
     nullable: true,
   })
   dob?: Date;
+
+  @Column({
+    type: "varchar",
+    nullable: true,
+  })
+  image?: string;
 }
 
 export default User;
