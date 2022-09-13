@@ -26,6 +26,7 @@ const auth: HandlerType = async (req, res, next) => {
       email,
       fullName,
       dob,
+      photo,
     } = req.user;
 
     const user = {
@@ -33,6 +34,7 @@ const auth: HandlerType = async (req, res, next) => {
       email,
       fullName,
       dob,
+      photo,
     };
     return res.json({ user });
   } catch (error) {

@@ -37,7 +37,7 @@ class User {
     type: "varchar",
     nullable: true,
   })
-  image?: string;
+  photo?: string;
 }
 
 export default User;

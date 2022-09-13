@@ -37,6 +37,7 @@ const signIn: HandlerType = async (req, res, next) => {
         email: true,
         fullName: true,
         dob: true,
+        photo: true,
       },
       where: {
         email,

@@ -15,7 +15,7 @@ type ResponseType = {
 };
 
 type BodyType = {
-  image: string;
+  photo: string;
 };
 
 type QueryType = Record<string, never>;
@@ -25,7 +25,7 @@ type HandlerType = RequestHandler<ParamsType, ResponseType, BodyType, QueryType>
 const uploadPhoto: HandlerType = async (req, res, next) => {
   try {
     const {
-      image,
+      photo,
     } = req.body;
     const id = +req.user.id;
 
@@ -34,14 +34,25 @@ const uploadPhoto: HandlerType = async (req, res, next) => {
       return next(new ApiError({ statusCode: StatusCodes.NOT_FOUND, message: 'user not found' }));
     }
 
-    const base64Image = image.split(';base64,').pop();
+    if (user.photo) {
+      const oldImageName = user.photo.slice(config.imagePath.length, user.photo.length);
+      const oldImagePath = `${config.static}${oldImageName}`;
+
+      fs.unlink(oldImagePath);
+    }
+
+    const base64Image = photo.split(';base64,').pop();
     if (!base64Image) {
       return next(new ApiError({ statusCode: StatusCodes.NOT_FOUND, message: 'user not found' }));
     }
 
-    const imageName = `${config.static}${uuid.v4()}.jpg`;
-    fs.writeFile(imageName, base64Image, { encoding: 'base64' });
-    user.image = base64Image;
+    const imageName = `${uuid.v4()}.jpg`;
+    const imagePath = `${config.static}${imageName}`;
+    const dbPath = `${config.imagePath}${imageName}`;
+
+    fs.writeFile(imagePath, base64Image, { encoding: 'base64' });
+
+    user.photo = dbPath;
 
     await db.user.save(user);
 

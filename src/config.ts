@@ -24,7 +24,8 @@ const config = {
   },
   passwordSalt: joinEnv.HASH_SALT,
   hashRule: joinEnv.HASH_RULE,
-  static: path.normalize(`${__dirname}/static`),
+  static: path.normalize(`${__dirname}/static/`),
+  imagePath: joinEnv.IMAGE_PATH,
 };
 
 export default config;
