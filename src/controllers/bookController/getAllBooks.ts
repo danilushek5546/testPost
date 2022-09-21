@@ -48,8 +48,7 @@ const getAllBooks: HandlerType = async (req, res, next) => {
     if (!priceMax) {
       priceMax = 100;
     }
-    const relations = await db.book.find({ relations: ['Genere'] });
-    console.log(relations);
+
     const books = await db.book.createQueryBuilder()
       .orderBy(
         (sortBy || 'id'), (sortDirection || 'ASC'),
