@@ -58,7 +58,7 @@ class Book {
   })
   dateOfIssue?: Date;
 
-  @ManyToMany(() => Genere)
+  @ManyToMany(() => Genere, genere => genere.id)
     @JoinTable()
     generes: Genere[];
 }

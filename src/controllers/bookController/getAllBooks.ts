@@ -1,5 +1,4 @@
 import type { RequestHandler } from 'express';
-import { Brackets } from 'typeorm';
 
 import type Book from '../../db/entities/Book';
 import db from '../../db';
@@ -12,6 +11,7 @@ type QueryType = {
   search?: string;
   priceMin?: number;
   priceMax?: number;
+  genere?: number[];
 };
 
 type ParamsType = Record<string, never>;
@@ -28,7 +28,7 @@ type HandlerType = RequestHandler<ParamsType, ResponseType, BodyType, QueryType>
 const getAllBooks: HandlerType = async (req, res, next) => {
   try {
     let { page, perPage, search, priceMin, priceMax } = req.query;
-    const { sortDirection, sortBy } = req.query;
+    const { sortDirection, sortBy, genere } = req.query;
     let offset = 0;
 
     search = `%${search || ''}%`;
@@ -49,17 +49,21 @@ const getAllBooks: HandlerType = async (req, res, next) => {
       priceMax = 100;
     }
 
-    const books = await db.book.createQueryBuilder()
+    const queryBuilder = db.book.createQueryBuilder('Book')
+      .leftJoin('Book.generes', 'genreForFilter')
+      .leftJoinAndSelect('Book.generes', 'genre')
       .orderBy(
-        (sortBy || 'id'), (sortDirection || 'ASC'),
+        (sortBy && `Book.${sortBy}`) || 'Book.id', sortDirection || 'ASC',
       )
-      .where(
-        new Brackets((qb) => {
-          qb.where('Book.name ilike :search', { search })
-            .orWhere('Book.author ilike :search', { search });
-        }),
-      )
-      .andWhere('Book.price >= :priceMin AND Book.price <= :priceMax', { priceMin, priceMax })
+      .where('(Book.name ILIKE :search OR Book.author ILIKE :search)', { search })
+      .andWhere('Book.price BETWEEN :priceMin AND :priceMax', { priceMin, priceMax });
+
+    if (genere) {
+      // const genereId = genere.split(' ');
+      queryBuilder.andWhere('genreForFilter.id IN (:...genere)', { genere });
+    }
+
+    const books = await queryBuilder
       .skip(offset)
       .take(+perPage)
       .getManyAndCount();

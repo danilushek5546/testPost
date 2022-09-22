@@ -30,7 +30,8 @@ export const getAllSchema: ValidationType = ({
     sortBy: yup.string(),
     sortDirection: yup.string(),
     search: yup.string(),
-    dobFrom: yup.string(),
-    dobTo: yup.string(),
+    priceMin: yup.string(),
+    priceMax: yup.string(),
+    // genere: yup.array().of(yup.string()),
   },
 });
