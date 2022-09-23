@@ -11,7 +11,7 @@ type QueryType = {
   search?: string;
   priceMin?: number;
   priceMax?: number;
-  genere?: number[];
+  genere?: string;
 };
 
 type ParamsType = Record<string, never>;
@@ -53,14 +53,14 @@ const getAllBooks: HandlerType = async (req, res, next) => {
       .leftJoin('Book.generes', 'genreForFilter')
       .leftJoinAndSelect('Book.generes', 'genre')
       .orderBy(
-        (sortBy && `Book.${sortBy}`) || 'Book.id', sortDirection || 'ASC',
+        (sortBy && `Book.${sortBy.toLowerCase()}`) || 'Book.id', sortDirection || 'ASC',
       )
       .where('(Book.name ILIKE :search OR Book.author ILIKE :search)', { search })
       .andWhere('Book.price BETWEEN :priceMin AND :priceMax', { priceMin, priceMax });
 
     if (genere) {
-      // const genereId = genere.split(' ');
-      queryBuilder.andWhere('genreForFilter.id IN (:...genere)', { genere });
+      const genereId = genere.split(',');
+      queryBuilder.andWhere('genreForFilter.id IN (:...genereId)', { genereId });
     }
 
     const books = await queryBuilder
