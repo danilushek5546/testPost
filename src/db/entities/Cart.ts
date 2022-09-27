@@ -22,6 +22,13 @@ class Cart {
   })
   bookId: number;
 
+  @Column({
+    type: "integer",
+    nullable: false,
+    default: 1,
+  })
+  count: number;
+
   @ManyToOne(() => User)
   @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
   user: User;
