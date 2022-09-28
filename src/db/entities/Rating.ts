@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/indent */
-import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne, ManyToOne } from 'typeorm';
 import Book from './Book';
 import User from './User';
 
-@Entity(({ name: 'cart' }))
-class Cart {
+@Entity(({ name: 'rating' }))
+class Rating {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -18,16 +18,15 @@ class Cart {
 
   @Column({
     type: "integer",
-    nullable: true,
+    nullable: false,
   })
   bookId: number;
 
   @Column({
-    type: "integer",
-    nullable: false,
-    default: 1,
+    type: "real",
+    nullable: true,
   })
-  count: number;
+  rate: number;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
@@ -38,4 +37,4 @@ class Cart {
   book: Book;
 }
 
-export default Cart;
+export default Rating;
