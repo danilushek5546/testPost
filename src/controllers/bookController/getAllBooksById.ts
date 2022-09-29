@@ -1,5 +1,4 @@
 import type { RequestHandler } from 'express';
-import { In } from 'typeorm';
 
 import type Book from '../../db/entities/Book';
 import db from '../../db';
@@ -19,7 +18,7 @@ type QueryType = {
 
 type HandlerType = RequestHandler<ParamsType, ResponseType, BodyType, QueryType>;
 
-const getAllCartBooks: HandlerType = async (req, res, next) => {
+const getAllBooksById: HandlerType = async (req, res, next) => {
   try {
     const { booksId } = req.query;
     const ids = booksId.split(',');
@@ -37,4 +36,4 @@ const getAllCartBooks: HandlerType = async (req, res, next) => {
   }
 };
 
-export default getAllCartBooks;
+export default getAllBooksById;

@@ -8,6 +8,7 @@ const router = Router();
 
 router.post('/', bookController.createBook);
 router.get('/', validatitonMiddleware(validationSchemas.getAllSchema), bookController.getAllBooks);
-router.get('/:id', validatitonMiddleware(validationSchemas.getOneSchema), bookController.getBookById);
+router.get('/one/:id', validatitonMiddleware(validationSchemas.getOneSchema), bookController.getBookById);
+router.get('/many', bookController.getAllBooksById);
 
 export default router;

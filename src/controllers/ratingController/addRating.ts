@@ -23,8 +23,10 @@ type QueryType = Record<string, never>;
 
 type HandlerType = RequestHandler<ParamsType, ResponseType, BodyType, QueryType>;
 
-const changeBookRate = async (bookId: number, rate: number) => {
-  const bookRate = await db.rating.findBy({ id: bookId });
+const changeBookRate = async (bookId: number) => {
+  const bookRate = await db.rating.createQueryBuilder('Rating')
+    .where('Rating.bookId = :bookId', { bookId })
+    .getMany();
   // // eslint-disable-next-line array-callback-return
   // const sumRate = bookRate.reduce((acum, item) => {
   //   // eslint-disable-next-line no-param-reassign
@@ -35,8 +37,8 @@ const changeBookRate = async (bookId: number, rate: number) => {
   bookRate.forEach((item) => {
     sumRate += item.rate;
   });
-  // eslint-disable-next-line no-param-reassign
-  return (+((rate + sumRate) / (bookRate.length + 1)).toFixed(1));
+
+  return (+((sumRate) / (bookRate.length)).toFixed(1));
 };
 
 const addToCart: HandlerType = async (req, res, next) => {
@@ -58,7 +60,7 @@ const addToCart: HandlerType = async (req, res, next) => {
 
       await db.rating.save(allreadyRate);
 
-      const sumRate = await changeBookRate(bookId, rate);
+      const sumRate = await changeBookRate(bookId);
       book.rating = sumRate;
 
       await db.book.save(book);
@@ -74,7 +76,7 @@ const addToCart: HandlerType = async (req, res, next) => {
 
     await db.rating.save(rating);
 
-    const sumRate = await changeBookRate(bookId, rate);
+    const sumRate = await changeBookRate(bookId);
     book.rating = sumRate;
 
     await db.book.save(book);

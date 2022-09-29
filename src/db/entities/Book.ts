@@ -30,9 +30,10 @@ class Book {
 
   @Column({
     type: "real",
-    nullable: true,
+    nullable: false,
+    default: 1,
   })
-  rating?: number;
+  rating: number;
 
   @Column({
     type: "varchar",

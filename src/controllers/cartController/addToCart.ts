@@ -19,24 +19,6 @@ type QueryType = Record<string, never>;
 
 type HandlerType = RequestHandler<ParamsType, ResponseType, BodyType, QueryType>;
 
-const changeBookRate = async (bookId: number, rate: number) => {
-  const book = await db.book.findOneBy({ id: bookId });
-  const bookRate = await db.rating.findBy({ id: bookId });
-  // // eslint-disable-next-line array-callback-return
-  // const sumRate = bookRate.reduce((acum, item) => {
-  //   // eslint-disable-next-line no-param-reassign
-  //   acum.rate += item.rate;
-  //   return (acum);
-  // });
-  let sumRate = 0;
-  bookRate.forEach((item) => {
-    sumRate += item.rate;
-  });
-  if (book) {
-    book.rating = +((rate + sumRate) / (bookRate.length + 1)).toFixed(1);
-  }
-};
-
 const addToCart: HandlerType = async (req, res, next) => {
   try {
     const { bookId } = req.params;
