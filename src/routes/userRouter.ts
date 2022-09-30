@@ -10,7 +10,7 @@ const router = Router();
 router.use(isAuth);
 
 router.get('/', validatitonMiddleware(validationSchemas.getAllSchema), usercontrollers.getAllUsers);
-router.get('/:id', validatitonMiddleware(validationSchemas.getOneSchema), usercontrollers.getOne);
+router.get('/:id', validatitonMiddleware(validationSchemas.getOneSchema), usercontrollers.getOneUser);
 router.delete('/:id', validatitonMiddleware(validationSchemas.getOneSchema), usercontrollers.deleteUser);
 router.post('/', validatitonMiddleware(validationSchemas.signUpSchema), usercontrollers.createUser);
 router.patch('/change-password', validatitonMiddleware(validationSchemas.updatePassSchema), usercontrollers.updatePassword);

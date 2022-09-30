@@ -7,6 +7,7 @@ import bookRouter from './bookRouter';
 import cartRouter from './cartRouter';
 import ratinRouter from './ratinRouter';
 import favoriteRouter from './favoriteRouter';
+import commentsRouter from './commentsRouter';
 
 const router = Router();
 
@@ -17,5 +18,6 @@ router.use('/book', bookRouter);
 router.use('/cart', cartRouter);
 router.use('/rating', ratinRouter);
 router.use('/favorite', favoriteRouter);
+router.use('/comments', commentsRouter);
 
 export default router;
