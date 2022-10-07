@@ -5,33 +5,38 @@ import db from '../../db';
 import ApiError from '../../utils/ApiError';
 import type Cart from '../../db/entities/Cart';
 
+type ParametrsType ={
+  bookId: number;
+  userId: number;
+  count: number;
+};
+
 type ParamsType = Record<string, never>;
 
 type ResponseType = {
   cart: Cart;
 };
 
-type BodyType = Record<string, never>;
-
-type QueryType = {
-  id: number;
-  count: number;
+type BodyType = {
+  params: ParametrsType;
 };
+
+type QueryType = Record<string, never>;
 
 type HandlerType = RequestHandler<ParamsType, ResponseType, BodyType, QueryType>;
 
-const addToCart: HandlerType = async (req, res, next) => {
+const updateCount: HandlerType = async (req, res, next) => {
   try {
-    const { id, count } = req.query;
+    const { bookId, userId, count } = req.body.params;
 
     const bookInCart = await db.cart.createQueryBuilder('Cart')
-      .where('Cart.id = :id', { id })
+      .where('Cart.userId = :userId AND Cart.bookId = :bookId ', { bookId, userId })
       .getOne();
     if (!bookInCart) {
       return next(new ApiError({ statusCode: StatusCodes.NOT_FOUND, message: 'this cart wasnt found' }));
     }
 
-    bookInCart.count = count;
+    bookInCart.count += count;
     const cart = await db.cart.save(bookInCart);
 
     return res.json({ cart });
@@ -40,4 +45,4 @@ const addToCart: HandlerType = async (req, res, next) => {
   }
 };
 
-export default addToCart;
+export default updateCount;

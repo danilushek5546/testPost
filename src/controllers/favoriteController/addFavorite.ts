@@ -6,7 +6,7 @@ import ApiError from '../../utils/ApiError';
 import type Favorite from '../../db/entities/Favorite';
 
 type ParamsType = {
-  bookId: number;
+  bookId: string;
 };
 
 type ResponseType = {
@@ -24,8 +24,10 @@ const addFavorite: HandlerType = async (req, res, next) => {
     const { bookId } = req.params;
     const userId = req.user.id;
 
+    const numBookId = +bookId;
+
     const allreadyFavorite = await db.favorite.createQueryBuilder('Favorite')
-      .where('Favorite.userId = :userId AND Favorite.bookId = :bookId', { userId, bookId })
+      .where('Favorite.userId = :userId AND Favorite.bookId = :numBookId', { userId, numBookId })
       .getOne();
     if (allreadyFavorite) {
       return next(new ApiError({ statusCode: StatusCodes.BAD_REQUEST, message: 'this book allready added to favorite' }));
@@ -33,7 +35,7 @@ const addFavorite: HandlerType = async (req, res, next) => {
 
     let favorite = db.favorite.create({
       userId,
-      bookId,
+      bookId: +bookId,
     });
 
     favorite = await db.favorite.save(favorite);

@@ -6,7 +6,7 @@ import ApiError from '../../utils/ApiError';
 import type Cart from '../../db/entities/Cart';
 
 type ParamsType = {
-  bookId: number;
+  bookId: string;
 };
 
 type ResponseType = {
@@ -33,7 +33,7 @@ const addToCart: HandlerType = async (req, res, next) => {
 
     let cart = db.cart.create({
       userId,
-      bookId,
+      bookId: +bookId,
     });
 
     cart = await db.cart.save(cart);

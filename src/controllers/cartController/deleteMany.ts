@@ -5,7 +5,7 @@ import db from '../../db';
 import ApiError from '../../utils/ApiError';
 
 type ParamsType = {
-  userId: number;
+  userId: string;
 };
 
 type ResponseType = Record<string, never>;
@@ -22,7 +22,7 @@ const deleteMany: HandlerType = async (req, res, next) => {
 
     const existInCart = await db.cart.find({
       where: {
-        userId,
+        userId: +userId,
       },
     });
     if (!existInCart) {

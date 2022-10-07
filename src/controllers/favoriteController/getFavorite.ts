@@ -4,7 +4,7 @@ import type Favorite from '../../db/entities/Favorite';
 import db from '../../db';
 
 type ParamsType = {
-  userId: number;
+  userId: string;
 };
 
 type ResponseType = {
@@ -23,7 +23,7 @@ const getFavorite: HandlerType = async (req, res, next) => {
 
     const favorite = await db.favorite.find({
       where: {
-        userId,
+        userId: +userId,
       },
     });
 

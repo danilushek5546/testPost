@@ -6,7 +6,7 @@ import type Comments from '../../db/entities/Comments';
 type QueryType = {
   page?: string;
   perPage?: string;
-  bookId: number;
+  bookId: string;
 };
 
 type ParamsType = Record<string, never>;
@@ -34,8 +34,10 @@ const getAllComments: HandlerType = async (req, res, next) => {
       perPage = '0';
     }
 
+    const numBookId = +bookId;
+
     const comments = await db.comments.createQueryBuilder('Comments')
-      .where('Comments.bookId = :bookId', { bookId })
+      .where('Comments.bookId = :numBookId', { numBookId })
       .skip(offset)
       .take(+perPage)
       .getManyAndCount();

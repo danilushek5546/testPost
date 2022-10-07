@@ -4,7 +4,7 @@ import db from '../../db';
 import type Cart from '../../db/entities/Cart';
 
 type ParamsType = {
-  userId: number;
+  userId: string;
 };
 
 type ResponseType = {
@@ -23,7 +23,7 @@ const getCart: HandlerType = async (req, res, next) => {
 
     const cart = await db.cart.find({
       where: {
-        userId,
+        userId: +userId,
       },
     });
 
