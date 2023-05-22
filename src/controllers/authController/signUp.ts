@@ -59,6 +59,7 @@ const signUp: HandlerType = async (req, res, next) => {
     const token = generateToken(user.id);
 
     delete user.password;
+
     return res.json({ user, token });
   } catch (error) {
     return next(error);

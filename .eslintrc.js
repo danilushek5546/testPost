@@ -1,3 +1,5 @@
+/* eslint-disable quotes */
+/* eslint-disable linebreak-style */
 module.exports = {
   env: {
     browser: true,
@@ -12,11 +14,14 @@ module.exports = {
   },
   parserOptions: {
     ecmaVersion: 2018,
+    tsconfigRootDir: __dirname,
+    sourceType: "module",
     project: ['./tsconfig.json', 'tsconfig.eslint.json'],
   },
   parser: '@typescript-eslint/parser',
   rules: {
     'eol-last': ['error', 'always'],
+    'linebreak-style': ["error", "windows"],
     'no-plusplus': 'off',
     'operator-linebreak': ['error', 'after', { overrides: { '?': 'before', ':': 'before' } }],
     'no-console': ['error', { allow: ['warn', 'error'] }],

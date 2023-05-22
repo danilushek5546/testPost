@@ -45,7 +45,9 @@ const signIn: HandlerType = async (req, res, next) => {
     });
 
     if (!user) {
-      return next(new ApiError({ statusCode: StatusCodes.NOT_FOUND, message: 'user with this email not found' }));
+      return next(new ApiError(
+        { statusCode: StatusCodes.NOT_FOUND, message: 'user with this email not found' },
+      ));
     }
 
     const comparePassword = await createHash(password);
