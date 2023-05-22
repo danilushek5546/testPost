@@ -1,0 +1,49 @@
+get /api/testPost/post принимает query параметр page выдает 20 записей post согласно страницы 
+и общее кол-во записей post
+формат входных данных { "page": number } формат выходных данных { postArray: Post[], count: number }
+
+post /api/testPost/post примает body опционально message и media array записывает пост в базу
+media array представляет собой массив строк формата base64
+формат входных данных  { message?: string, mediaArray?: string[]} формат выходных данных { post: Post }
+
+patch /api/testPost/post/:postId примает body опционально message и media array, authorization header jwt token 
+params postId - id поста
+перезаписывает пост в базу, проверяя авторство
+media array представляет собой массив строк формата base64
+формат входных данных postId: number, { message?: string, mediaArray?: string[] }
+формат выходных данных { post: Post }
+
+delete /api/testPost/post/:postId params postId authorization header jwt token 
+params postId- id поста
+удаляет пост из базы, проверяя авторство
+media array представляет собой массив строк формата base64
+формат входных данных  postId: number 
+
+post /api/testPost/auth/login примает body email и password
+проводит авторизацию пользователя путем сверки email и password и выдает token
+формат входных данных  { email: string, password: string } формат выходных данных { user: User, token: string }
+
+post /api/testPost/auth/registration примает body email и password
+проводит регистрацию пользователя записывая данные в базу
+формат входных данных  { email: string, password: string } формат выходных данных { user: User, token: string }
+
+get /api/testPost/auth/isAuth принимат uthorization header jwt token 
+проводит проверку подлинности токена и записывает пользователя в req.user
+
+User: {
+  id: number;
+  fullName?: string;
+  email: string;
+  password?: string;
+  dob?: Date;
+  photo?: string;
+}
+
+Post: {
+  id: number;
+  userId: number;
+  author: string;
+  creationDate: Date;
+  message?: string;
+  media?: string[];
+}

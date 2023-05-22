@@ -2,40 +2,46 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/indent */
 import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne } from 'typeorm';
-import Book from './Book';
 import User from './User';
 
-@Entity(({ name: 'cart' }))
-class Cart {
+@Entity(({ name: 'posts' }))
+class Post {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({
-    type: "integer",
+    type: 'integer',
     nullable: false,
   })
   userId: number;
 
   @Column({
-    type: "integer",
-    nullable: true,
+    type: 'varchar',
+    nullable: false,
   })
-  bookId: number;
+  author: string;
 
   @Column({
-    type: "integer",
+    type: 'date',
     nullable: false,
-    default: 1,
   })
-  count: number;
+  creationDate: Date;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  message?: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  media?: string[];
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
   user: User;
-
-  @ManyToOne(() => Book)
-  @JoinColumn({ name: 'bookId', referencedColumnName: 'id' })
-  book: Book;
 }
 
-export default Cart;
+export default Post;

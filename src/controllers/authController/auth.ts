@@ -1,5 +1,7 @@
 import type { RequestHandler } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
+import ApiError from '../../utils/ApiError';
 import type User from '../../db/entities/User';
 
 type ParamsType = Record<string, never>;
@@ -21,6 +23,10 @@ type HandlerType = RequestHandler<ParamsType, ResponseType, BodyType, QueryType>
 
 const auth: HandlerType = async (req, res, next) => {
   try {
+    if (!req.user) {
+      return next(new ApiError({ statusCode: StatusCodes.UNAUTHORIZED, message: 'unauthorized' }));
+    }
+
     const {
       id,
       email,

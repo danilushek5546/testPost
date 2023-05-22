@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 import path from 'path';
 
 const localEnv = dotenv.config({ path: path.normalize(`${__dirname}/../.env`) }).parsed;
@@ -23,9 +23,14 @@ const config = {
     expiresIn: joinEnv.TOKEN_EXPIRES_IN,
   },
   passwordSalt: joinEnv.HASH_SALT,
-  hashRule: joinEnv.HASH_RULE,
-  static: path.normalize(`${__dirname}/static/`),
-  imagePath: joinEnv.IMAGE_PATH,
+  perPage: 20,
+  minio: {
+    secretKey: joinEnv.MINIO_SECRET_KEY,
+    accessKey: joinEnv.MINIO_ACCESS_KEY,
+    host: joinEnv.MINIO_HOST,
+    endpoint: joinEnv.MINIO_ENDPOINT,
+    bucketName: joinEnv.MINIO_BUCKET_NAME,
+  },
 };
 
 export default config;

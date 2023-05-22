@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "ES6",
+    "module": "CommonJS",
+    "target": "ES2016",
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
-    "outDir": "dist",
+    "outDir": "./dist",
+    "rootDir": "./src",
     "baseUrl": ".",
     "noImplicitAny": true,
     "strict": true,
@@ -17,6 +18,9 @@
       "src/@types",
       "./node_modules/@types",
     ]
+  },
+  "ts-node": {
+    "esm": true
   },
   "lib": [
     "ES2022"

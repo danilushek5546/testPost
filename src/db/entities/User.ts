@@ -8,33 +8,33 @@ class User {
   id: number;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     nullable: true,
   })
   fullName?: string;
 
   @Column({
     unique: true,
-    type: "varchar",
+    type: 'varchar',
     nullable: false,
   })
   email: string;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     nullable: false,
     select: false,
   })
   password?: string;
 
   @Column({
-    type: "date",
+    type: 'date',
     nullable: true,
   })
   dob?: Date;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     nullable: true,
   })
   photo?: string;
